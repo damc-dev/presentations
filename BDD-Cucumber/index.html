@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Behavior Driven Development with Cucumber</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+      .red {
+        color: red;
+      }
+
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      .diagram img{
+        max-width:100%;
+        max-height:90%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Behavior Driven Development with Cucumber
+### By David McElligott
+
+.footnote[created with [RemarkJS](http://remarkjs.com/)]
+
+---
+
+# What is BDD?
+
+* ## It builds apon best practices of TDD and Agile
+* ## Starts with a failing customer acceptance test that describes the behavior of the system from the customer’s point of view [1]
+* ## Used for acceptance tests, because it explains real user stories
+
+.footnote[.red.bold[\[1\]] The Cucumber Book ]
+---
+
+# Why Behavior Driven Development?
+
+### Have you documented that?
+* #### Provides a shared repository of specifications
+
+### Is that what you mean?
+* #### Captures stakeholder requirements in a way that can be understood by domain experts, testers, and developers
+
+### So how does this work?
+* #### Deliverables and their expected behavior are documented as features
+
+---
+
+![Cucumber](https://cucumber.io/images/cucumber-logo.svg)
+* ### BDD and collaboration tool
+* ### Automated Acceptance Tests
+* ### Cucumber uses a plain text DSL (Gherkin)
+* ### Cucumber implementations are available for a number of languages
+  * Ruby, Java, Groovy, JavaScript, Python
+
+---
+
+# How it Works
+
+### 1. Describe Behavior in plain text
+
+### 2. Write a step definition in Java
+
+### 3. Run and watch it fail
+
+### 4. Write code to make the step pass
+
+### 5. Run again and see the step pass
+
+### 6. Repeat 2-5 until all your steps are passing
+
+---
+
+# Gherkin
+
+```terminal
+Feature: Some terse yet descriptive text of what is desired
+  In order to realize a named business value
+  As an explicit system actor
+  I want to gain some beneficial outcome which furthers the goal
+
+  Scenario: Some determinable business situation
+    Given some precondition
+      And some other precondition
+     When some action by the actor
+      And some other action
+      And yet another action
+     Then some testable outcome is achieved
+      And something else we can check happens too
+
+  Scenario: A different situation
+      ...
+```
+
+.red.bold[\[2\]] behat: writing features - gherkin language
+---
+
+# Example Feature File
+
+```terminal
+
+Feature: Sign up
+
+  Sign up should be quick and friendly.
+
+  Scenario: Successful sign up
+
+     New users should get a confirmation email and be greeted
+     personally by the site once signed in.
+
+     Given I have chosen to sign up
+      When I sign up with valid details
+      Then I should receive a confirmation email
+      And I should see a personalized greeting message
+
+
+  Scenario: Duplicate email
+
+     Where someone tries to create an account for an email address
+     that already exists.
+
+     Given I have chosen to sign up
+       But I enter an email address that has already registered
+      Then I should be told that the email is already registered
+       And I should be offered the option to recover my password
+```
+
+.red.bold[\[1\]] The Cucumber Book
+---
+
+# Writing a Feature File
+
+### Feature
+Should describe a single feature that your are testing
+
+```terminal
+Feature: Refund item
+
+  Sales assistants should be able to refund customers' purchases.
+  This is required by the law, and is also essential in order to
+  keep customers happy.
+```
+
+.footnote[.red.bold[*] [Feature File Example](#7)]
+
+---
+# Writing a Feature File
+
+### Scenario
+The specific scenario that this test will cover
+
+### Steps
+
+* **Given:** Describes the initial state of the system
+
+* **When:** Describes an event or an action
+
+* **Then:** Describes the expected outcome
+
+.footnote[.red.bold[*] [Feature File Example](#7)]
+
+---
+
+# Write a Feature File
+
+### Background
+
+If you are repeating your inital steps to set up the context it may be a good place for a Background
+
+```terminal
+
+Background:
+  Given a $100 microwave was sold on 2015-11-03
+    And today is 2015-11-18
+
+```
+
+Similiar to the JUnit @Before annotated method
+
+
+---
+# Automated Acceptance Testing
+
+### Jenkins Integration
+https://github.com/masterthought/jenkins-cucumber-jvm-reports-plugin-java
+
+### Example
+[StarMap Cucumber Reports](http://omdx1b55:9000/job/starmap-acceptance-tests/cucumber-html-reports)
+
+---
+class: center, middle
+
+# How We Use It in USM
+
+[Product Decomposition](http://wiki.www.uprr.com/confluence/download/attachments/65412336/Visio-USM%20Product%20Decomposition.pdf?version=1&modificationDate=1433785595984&api=v2)
+
+---
+class: center, middle
+# Show Me the Code!
+
+---
+
+# Tools
+#### Cucumber
+* https://cucumber.io/
+
+#### Cucumber-JVM
+* https://github.com/cucumber/cucumber-jvm
+
+#### Cucumber-Eclipse
+* https://github.com/cucumber/cucumber-eclipse
+
+#### Gitnesse (not what you think!)
+* http://gitnesse.com/
+
+#### RemarkJS
+* http://remarkjs.com/
+---
+
+# Resources
+
+#### Cucumber Demo
+* http://wiki.www.uprr.com/confluence/display/NCA/Cucumber+Demo
+
+---
+
+# References
+#### [1] The Cucumber Book
+* http://search.safaribooksonline.com/book/software-engineering-and-development/9781941222911
+
+#### [2] behat: writing features - gherkin language
+* http://behat.readthedocs.org/en/v2.5/guides/1.gherkin.html
+
+#### Cucumber Docs
+* https://cucumber.io/docs
+
+#### Cucumber Reference
+* https://cucumber.io/docs/reference
+
+    </textarea>
+    <!--
+    ---
+    # Workflow
+
+    * ### BA's work with domain experts to create acceptance tests in their domain specific language
+    * ### Developers can then generate step definitions (Java methods) then  fill them out to perform whats described in the step definitions taking inputs if needed
+    -->
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai'
+      });
+    </script>
+  </body>
+</html>
