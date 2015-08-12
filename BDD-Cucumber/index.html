@@ -44,11 +44,17 @@ class: center, middle
 
 # What is BDD?
 
-* ## It builds apon best practices of TDD and Agile
+* ## A method of communicating an idea
+* ## It builds upon best practices of TDD and Agile
 * ## Starts with a failing customer acceptance test that describes the behavior of the system from the customer’s point of view [1]
 * ## Used for acceptance tests, because it explains real user stories
 
 .footnote[.red.bold[\[1\]] The Cucumber Book ]
+---
+
+# Corey Haines Says it Best
+
+<iframe src="https://player.vimeo.com/video/23061155" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe> <p><a href="https://vimeo.com/23061155">Corey Haines - BDD in 5 minutes</a> from <a href="https://vimeo.com/agilece">ACE! Conferences</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
 ---
 
 # Why Behavior Driven Development?
@@ -167,6 +173,8 @@ Feature: Refund item
 ### Scenario
 The specific scenario that this test will cover
 
+* Each scenario must make sense and be able to be executed independently of any other scenario.
+
 ### Steps
 
 * **Given:** Describes the initial state of the system
@@ -183,7 +191,7 @@ The specific scenario that this test will cover
 
 ### Background
 
-If you are repeating your inital steps to set up the context it may be a good place for a Background
+If you are repeating your initial steps to set up the context it may be a good place for a Background
 
 ```terminal
 
@@ -193,10 +201,19 @@ Background:
 
 ```
 
-Similiar to the JUnit @Before annotated method
+Similar to the JUnit @Before annotated method
 
 
 ---
+
+# Step Definitions
+A Java method annotated with a step containing regex that will be used to match features with step definitions
+
+
+By running the feature files without implementing matching step definitions, Cucumber will generate the regex for you.
+
+---
+
 # Automated Acceptance Testing
 
 ### Jenkins Integration
