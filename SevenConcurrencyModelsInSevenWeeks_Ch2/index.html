@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Behavior Driven Development with Cucumber</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+      .red {
+        color: red;
+      }
+
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      .diagram img{
+        max-width:100%;
+        max-height:90%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Seven Concurrency Models in Seven Weeks
+## Chapter 2: Threads and Locks
+### By David McElligott
+
+.footnote[created with [RemarkJS](http://remarkjs.com/)]
+
+---
+
+# Day 1
+
+* Basics of multithreaded code in Java
+* Primary pitfalls to encounter
+* Solutions to pitfalls
+
+# Day 2
+
+* Beyond the basics
+* investigate facilities provided by java.util.concurrent package
+
+# Day 3
+
+* Concurrent data structures provided by standard library
+* How to use concurrent data structures to solve problems
+
+---
+
+# Day 1: Mutual Exclusion and Memory Models
+
+Basic unit of concurrency in Java is the Thread, which encapsulates a single thread of control
+
+```java
+
+public class HelloWorld {
+  public static void main(String[] args throws InterruptedException {
+    Thread myThread = new Thread() {
+      public void run() {
+        system.out.println("Hello World");
+      }
+    }
+    myThread.start();
+    Thread.yeild();
+    System.out.println("Hello from main thread");
+    myThread.join();
+  }
+
+}
+
+```
+
+---
+
+# Day 1: Mutual Exclusion and Memory Models
+
+output:
+
+```
+Hello from main thread
+Hello from new thread
+```
+
+or
+
+```
+Hello from new thread
+Hello from main thread
+```
+---
+
+Mutual exclusion -- Using locks to ensure that only one thread can access data at a time
+
+
+---
+
+# Day 1: What We Learned
+
+We covered how to create threads and use the intrinsic locks built into every
+Java object to enforce mutual exclusion between them. We also saw the three
+primary perils of threads and locks—race conditions, deadlock, and memory
+visibility, and we discussed some rules that help us avoid them:
+
+* Synchronize all access to shared variables.
+* Both the writing and the reading threads need to use synchronization.
+* Acquire multiple locks in a fixed, global order.
+* Don’t call alien methods while holding a lock.
+* Hold locks for the shortest possible amount of time.
+
+
+---
+
+# Day 2: Beyond Intrinsic Locks
+
+Intrinsic locks are convenient by limited.
+
+* There is no way to interrupt a thread that’s blocked as a result of trying to acquire an intrinsic lock.
+* There is no way to time out while trying to acquire an intrinsic lock.
+* There’s exactly one way to acquire an intrinsic lock: a synchronized block
+
+---
+
+
+# Day 2: Reentrant Lock
+
+Intrinsic Lock
+
+```java 
+
+synchronized(object) {
+  // use shared resource
+}
+```
+
+Same behavior with explicit locking
+
+
+```java
+Lock lock = new ReentrantLock();
+lock.lock();
+try {
+  // use shared resource
+} finally {
+  lock.unlock();
+}
+
+```
+
+---
+
+# Day 2: Interruptible Locking 
+
+```java
+final ReentrantLock l1 = new ReentrantLock();
+final ReentrantLock l2 = new ReentrantLock();
+Thread t1 = new Thread() {
+  public void run() {
+    try {
+      l1.lockInterruptibly();
+      Thread.sleep(1000);
+      l2.lockInterruptibly();
+    } catch (InterruptedException e) { System.out.println("t1 interrupted"); }
+  }
+};
+
+```
+
+---
+
+## Day 2: Lock Timeout
+
+```java
+class Philosopher extends Thread {
+  private ReentrantLock leftChopstick, rightChopstick;
+  private Random random;
+  public Philosopher(ReentrantLock leftChopstick, ReentrantLock rightChopstick) {
+    this.leftChopstick = leftChopstick; this.rightChopstick = rightChopstick;
+    random = new Random();
+  }
+  public void run() {
+    try {
+      while(true) {
+        Thread.sleep(random.nextInt(1000)); // Think for a while
+        leftChopstick.lock();
+        try {
+          if (rightChopstick.tryLock(1000, TimeUnit.MILLISECONDS)) {
+            // Got the right chopstick
+            try {
+              Thread.sleep(random.nextInt(1000)); // Eat for a while
+            } finally { rightChopstick.unlock(); }
+          } else { // Didn't get the right chopstick - give up }
+        } finally { leftChopstick.unlock(); }
+      }
+    } catch(InterruptedException e) {}
+  }
+}
+```
+Timeouts are rarely a good solution, its far better to avoid deadlock in the first place
+
+---
+
+# Day 2: Condition Variables
+
+```java
+
+ReentrantLock lock = new ReentrantLock();
+Condition condition = lock.newCondition();
+lock.lock();
+try {
+  while (!«condition is true»)
+    condition.await();
+  «use shared resources»
+} finally { lock.unlock(); }
+
+```
+
+An operation is *atomic* if, from the point of view of another thread, it appears to be a single operation that has either happened or not--it never appears to be halfway through
+
+---
+
+# Day 2: Atomic Variables
+
+## Benefits over using a lock
+
+* Its not possible to forget to acquire the lock when neccessary
+* Because no locks are involved its impossible for an operation on an atomic variable to deadlock
+* Atomic variables are the foundation of *non-blocking*, *lock-free* algorithms, which acheives synchronization without locks or blocking
+
+
+---
+
+# Day 2: What We Learned
+
+We saw how ReentrantLock and java.util.concurrent.atomic can overcome the limitations
+of intrinsic locks so that our threads can do the following:
+
+* Be interrupted while trying to acquire a lock
+* Time out while acquiring a lock
+* Acquire and release locks in any order
+* Use condition variables to wait for arbitrary conditions to become true
+* Avoid locks entirely by using atomic variables
+
+
+---
+
+# Day 3: What We Learned
+
+We saw how the facilities provided by java.util.concurrent not only make it easier
+to create concurrent programs, but also make those programs safer and more
+efficient by doing the following:
+
+* Using thread pools instead of creating threads directly
+* Creating simpler and more efficient listener-management code with CopyOnWriteArrayList
+* Allowing producers and consumers to communicate efficiently with ArrayBlockingQueue
+* Supporting highly concurrent access to a map with ConcurrentHashMap
+
+
+    </textarea>
+   <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai'
+      });
+    </script>
+  </body>
+</html>
