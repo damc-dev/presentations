@@ -257,6 +257,51 @@ of intrinsic locks so that our threads can do the following:
 
 ---
 
+# Day 3: Thread-Creation Redux
+
+It rarely makes sense to create threads directly:
+* Should really bound the max number of threads
+* Reuse finished threads instead of creating new ones
+
+### Thread Pool
+
+```java
+
+int threadPoolSize = Runtime.getRuntime().availableProcessors() * 2;
+ExecutorService executor = Executors.newFixedThreadPool(threadPoolSize);
+while (true) {
+  Socket socket = server.accept();
+  executor.execute(new ConnectionHandler(socket));
+}
+
+```
+???
+
+FixedThreadPool will leave the number of threads alive always, if you want memory to be freed when no threads are in use then use newCachedThreadPool
+
+source: [Stackoverflow](http://stackoverflow.com/questions/949355/java-newcachedthreadpool-versus-newfixedthreadpool)
+
+---
+
+# Day 3: Copy on Write
+
+Copy on write creates a defensive copy when the arraylist is changed as opposed to the previous solution on page. 18 of locking everytime updateProgress is called
+
+---
+
+# Day 3: A Complete Program
+
+[Source Code](https://pragprog.com/titles/pb7con/source_code)
+
+Examples:
+* ThreadsLocks/WordCount
+* ThreadsLocks/WordCountProducerConsumer
+* ThreadsLocks/WordCountSynchronizedHashMap
+* ThreadsLocks/WordCountConcurrentHashMap
+* ThreadsLocks/WordCountBatchConcurrentHashMap
+
+---
+
 # Day 3: What We Learned
 
 We saw how the facilities provided by java.util.concurrent not only make it easier
@@ -268,6 +313,12 @@ efficient by doing the following:
 * Allowing producers and consumers to communicate efficiently with ArrayBlockingQueue
 * Supporting highly concurrent access to a map with ConcurrentHashMap
 
+---
+
+# Credits
+
+### Seven Concurrency Models in Seven Weeks
+#### by: Paul Butcher
 
     </textarea>
    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
