@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Golang at Union Pacific</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+      .red {
+        color: red;
+      }
+
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      .diagram img{
+        max-width:100%;
+        max-height:90%;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Golang at Union Pacific
+### By David McElligott
+
+.footnote[created with [RemarkJS](http://remarkjs.com/)]
+
+---
+
+# About Golang 
+
+* ## A concurrent, garbage collected modern programming language, with fast compilation
+* ## Designed by Google engineers
+
+---
+
+# Golang Guiding Principles
+
+* ## Reduce code clutter and complexity
+* ## Clean syntax with few keywords
+* ## Simple to understand
+
+---
+
+# Benefits of Golang
+
+* ## Code is statically compiled (with all its dependencies) into a portable binary
+* ## Concurrency features of modern functional languages is built in
+* ## Provides safety, efficiency, and ease of development
+* ## Tooling built in
+
+---
+
+# When Would You Use Golang?
+
+* ## Server software
+* ## Replacement of scripts
+* ## Low overhead applications
+
+---
+
+# When Should You Avoid Golang?
+
+* ## Standard development
+* ## Complicated data models
+* ## Integration with other Union Pacific systems is required
+  - e.g. Tibco JMS, ESB, Siteminder, CyberArk
+
+---
+
+# How Are We Using It?
+
+* ## USM Monitoring of Servers
+  * CPU, Memory, Disk, Processes, Apache, Oracle
+  * Telegraf (https://github.com/influxdata/telegraf)
+* ## Script Replacement
+  * Parallel Pmrun (http://git-dev.uit.tla.uprr.com:9080/systems-engineering/parallel-pmrun) [Work in Progress]
+  * jhe-cli (http://git-dev.uit.tla.uprr.com:9080/systems-engineering/jhe)
+
+---
+
+# References
+
+* [Official Website](https://golang.org/)
+* [FAQ](https://golang.org/doc/faq) 
+  - Answer questions from why Go was developed to how best to accomplish composition
+* [A Tour of Go](https://tour.golang.org/welcome/1) 
+  - A step by step tutorial to teach you about Golang keywords and language features
+* [Go Concurrency Patterns](https://www.youtube.com/watch?v=f6kdp27TYZs) 
+  - A good overview of concurrency and how it works in Golang
+
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        highlightStyle: 'monokai'
+      });
+    </script>
+  </body>
+</html>
